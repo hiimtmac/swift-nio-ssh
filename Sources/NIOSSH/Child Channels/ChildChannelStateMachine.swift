@@ -435,7 +435,7 @@ extension ChildChannelStateMachine {
             precondition(message.recipientChannel == channelID.peerChannelID)
             self.state = .halfClosedLocal(channelID: channelID)
 
-        case .halfClosedLocal(let channelID):
+        case .halfClosedRemote(let channelID):
             precondition(message.recipientChannel == channelID.peerChannelID)
             self.state = .quiescent(channelID: channelID)
 
@@ -443,7 +443,7 @@ extension ChildChannelStateMachine {
             // In the idle state we haven't either sent a channel open or received one. This is not really possible.
             preconditionFailure("Somehow sent channel EOF for idle channel")
 
-        case .requestedLocally, .requestedRemotely, .halfClosedRemote, .quiescent, .closedLocally, .closedRemotely,
+        case .requestedLocally, .requestedRemotely, .halfClosedLocal, .quiescent, .closedLocally, .closedRemotely,
             .closed:
             throw NIOSSHError.protocolViolation(protocolName: "channel", violation: "Sent EOF out of sequence.")
         }
